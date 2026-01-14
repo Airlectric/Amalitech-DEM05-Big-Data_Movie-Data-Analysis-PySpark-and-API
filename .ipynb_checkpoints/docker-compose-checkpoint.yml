@@ -13,4 +13,4 @@ services:
       - SPARK_MODE=local
     restart: unless-stopped
     command: >
-      jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --ServerApp.iopub_data_rate_limit=10000000 --allow-root --NotebookApp.token='' --NotebookApp.password=''
+      jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''

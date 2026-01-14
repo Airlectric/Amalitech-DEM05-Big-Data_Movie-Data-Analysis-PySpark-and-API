@@ -1,9 +1,9 @@
 import requests
-from ..utils.config import (
+from utils.config import (
     API_KEY, BASE_URL, DEFAULT_LANGUAGE,
     REQUEST_TIMEOUT, MAX_RETRIES, RETRY_BACKOFF,
 )
-from ..utils.logger_config import logger
+from utils.logger_config import logger
 import time
 
 def fetch_with_retry(url, params):

@@ -1,0 +1,8 @@
+2026-01-14 15:22:56,940 - ERROR - extractor_tmdb - HTTP error on attempt 0: 404 Client Error: Not Found for url: https://api.themoviedb.org/3/movie/0?append_to_response=credits&api_key=d855a01d02babf081991d455eff39348&language=en-US&movie_id=0
+2026-01-14 15:22:59,339 - ERROR - extractor_tmdb - HTTP error on attempt 1: 404 Client Error: Not Found for url: https://api.themoviedb.org/3/movie/0?append_to_response=credits&api_key=d855a01d02babf081991d455eff39348&language=en-US&movie_id=0
+2026-01-14 15:23:01,702 - ERROR - extractor_tmdb - HTTP error on attempt 2: 404 Client Error: Not Found for url: https://api.themoviedb.org/3/movie/0?append_to_response=credits&api_key=d855a01d02babf081991d455eff39348&language=en-US&movie_id=0
+2026-01-14 15:23:04,079 - ERROR - extractor_tmdb - HTTP error on attempt 3: 404 Client Error: Not Found for url: https://api.themoviedb.org/3/movie/0?append_to_response=credits&api_key=d855a01d02babf081991d455eff39348&language=en-US&movie_id=0
+2026-01-14 15:23:06,624 - ERROR - extractor_tmdb - HTTP error on attempt 4: 404 Client Error: Not Found for url: https://api.themoviedb.org/3/movie/0?append_to_response=credits&api_key=d855a01d02babf081991d455eff39348&language=en-US&movie_id=0
+2026-01-14 15:23:08,948 - ERROR - extractor_tmdb - HTTP error on attempt 5: 404 Client Error: Not Found for url: https://api.themoviedb.org/3/movie/0?append_to_response=credits&api_key=d855a01d02babf081991d455eff39348&language=en-US&movie_id=0
+2026-01-14 15:23:08,950 - ERROR - extractor_tmdb - Failed after 5 attempts: https://api.themoviedb.org/3/movie/0?append_to_response=credits
+2026-01-14 15:23:08,952 - ERROR - extractor_tmdb - Failed to fetch movies 0: Max retries reached.

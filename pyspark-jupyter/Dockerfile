@@ -1,4 +1,4 @@
-FROM apache/spark-py:v3.5.1
+FROM apache/spark:3.5.1
 
 USER root
 
@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
 
 # Install Python libraries
 RUN pip3 install --no-cache-dir \
+    pyspark \
     jupyterlab \
     pandas \
     numpy \
@@ -17,7 +18,9 @@ RUN pip3 install --no-cache-dir \
     seaborn \
     sqlalchemy \
     psycopg2-binary \
-    findspark
+    findspark \
+    requests \
+    python-dotenv
 
 # Create working directory
 WORKDIR /workspace

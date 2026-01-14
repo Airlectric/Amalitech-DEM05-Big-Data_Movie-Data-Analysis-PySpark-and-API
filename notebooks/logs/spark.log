@@ -1,0 +1,213 @@
+2026-01-14 15:22:41 INFO  SparkContext:60 - Running Spark version 3.5.1
+2026-01-14 15:22:41 INFO  SparkContext:60 - OS info Linux, 6.6.87.2-microsoft-standard-WSL2, amd64
+2026-01-14 15:22:41 INFO  SparkContext:60 - Java version 11.0.22
+2026-01-14 15:22:41 INFO  ResourceUtils:60 - ==============================================================
+2026-01-14 15:22:41 INFO  ResourceUtils:60 - No custom resources configured for spark.driver.
+2026-01-14 15:22:41 INFO  ResourceUtils:60 - ==============================================================
+2026-01-14 15:22:41 INFO  SparkContext:60 - Submitted application: MovieProject
+2026-01-14 15:22:41 INFO  ResourceProfile:60 - Default ResourceProfile created, executor resources: Map(cores -> name: cores, amount: 1, script: , vendor: , memory -> name: memory, amount: 1024, script: , vendor: , offHeap -> name: offHeap, amount: 0, script: , vendor: ), task resources: Map(cpus -> name: cpus, amount: 1.0)
+2026-01-14 15:22:41 INFO  ResourceProfile:60 - Limiting resource is cpu
+2026-01-14 15:22:41 INFO  ResourceProfileManager:60 - Added ResourceProfile id: 0
+2026-01-14 15:22:41 INFO  SecurityManager:60 - Changing view acls to: root
+2026-01-14 15:22:41 INFO  SecurityManager:60 - Changing modify acls to: root
+2026-01-14 15:22:41 INFO  SecurityManager:60 - Changing view acls groups to: 
+2026-01-14 15:22:41 INFO  SecurityManager:60 - Changing modify acls groups to: 
+2026-01-14 15:22:41 INFO  SecurityManager:60 - SecurityManager: authentication disabled; ui acls disabled; users with view permissions: root; groups with view permissions: EMPTY; users with modify permissions: root; groups with modify permissions: EMPTY
+2026-01-14 15:22:42 INFO  Utils:60 - Successfully started service 'sparkDriver' on port 37843.
+2026-01-14 15:22:42 INFO  SparkEnv:60 - Registering MapOutputTracker
+2026-01-14 15:22:42 INFO  SparkEnv:60 - Registering BlockManagerMaster
+2026-01-14 15:22:42 INFO  BlockManagerMasterEndpoint:60 - Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+2026-01-14 15:22:42 INFO  BlockManagerMasterEndpoint:60 - BlockManagerMasterEndpoint up
+2026-01-14 15:22:42 INFO  SparkEnv:60 - Registering BlockManagerMasterHeartbeat
+2026-01-14 15:22:42 INFO  DiskBlockManager:60 - Created local directory at /tmp/blockmgr-bd3916b6-44bd-4299-bb6a-8033ee31df07
+2026-01-14 15:22:42 INFO  MemoryStore:60 - MemoryStore started with capacity 434.4 MiB
+2026-01-14 15:22:42 INFO  SparkEnv:60 - Registering OutputCommitCoordinator
+2026-01-14 15:22:43 INFO  JettyUtils:60 - Start Jetty 0.0.0.0:4040 for SparkUI
+2026-01-14 15:22:43 INFO  Utils:60 - Successfully started service 'SparkUI' on port 4040.
+2026-01-14 15:22:43 INFO  Executor:60 - Starting executor ID driver on host fe11f4b56252
+2026-01-14 15:22:43 INFO  Executor:60 - OS info Linux, 6.6.87.2-microsoft-standard-WSL2, amd64
+2026-01-14 15:22:43 INFO  Executor:60 - Java version 11.0.22
+2026-01-14 15:22:43 INFO  Executor:60 - Starting executor with user classpath (userClassPathFirst = false): ''
+2026-01-14 15:22:43 INFO  Executor:60 - Created or updated repl class loader org.apache.spark.util.MutableURLClassLoader@6fbd2c2d for default.
+2026-01-14 15:22:43 INFO  Utils:60 - Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 38249.
+2026-01-14 15:22:43 INFO  NettyBlockTransferService:84 - Server created on fe11f4b56252:38249
+2026-01-14 15:22:43 INFO  BlockManager:60 - Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+2026-01-14 15:22:43 INFO  BlockManagerMaster:60 - Registering BlockManager BlockManagerId(driver, fe11f4b56252, 38249, None)
+2026-01-14 15:22:43 INFO  BlockManagerMasterEndpoint:60 - Registering block manager fe11f4b56252:38249 with 434.4 MiB RAM, BlockManagerId(driver, fe11f4b56252, 38249, None)
+2026-01-14 15:22:43 INFO  BlockManagerMaster:60 - Registered BlockManager BlockManagerId(driver, fe11f4b56252, 38249, None)
+2026-01-14 15:22:43 INFO  BlockManager:60 - Initialized BlockManager: BlockManagerId(driver, fe11f4b56252, 38249, None)
+2026-01-14 15:22:46 INFO  SharedState:60 - Setting hive.metastore.warehouse.dir ('null') to the value of spark.sql.warehouse.dir.
+2026-01-14 15:22:46 INFO  SharedState:60 - Warehouse path is 'file:/workspace/notebooks/spark-warehouse'.
+2026-01-14 15:23:37 WARN  SparkStringUtils:72 - Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.
+2026-01-14 15:23:38 INFO  CodeGenerator:60 - Code generated in 693.927523 ms
+2026-01-14 15:23:38 INFO  SparkContext:60 - Starting job: showString at <unknown>:0
+2026-01-14 15:23:38 INFO  DAGScheduler:60 - Got job 0 (showString at <unknown>:0) with 1 output partitions
+2026-01-14 15:23:38 INFO  DAGScheduler:60 - Final stage: ResultStage 0 (showString at <unknown>:0)
+2026-01-14 15:23:38 INFO  DAGScheduler:60 - Parents of final stage: List()
+2026-01-14 15:23:38 INFO  DAGScheduler:60 - Missing parents: List()
+2026-01-14 15:23:38 INFO  DAGScheduler:60 - Submitting ResultStage 0 (MapPartitionsRDD[11] at showString at <unknown>:0), which has no missing parents
+2026-01-14 15:23:38 INFO  MemoryStore:60 - Block broadcast_0 stored as values in memory (estimated size 39.4 KiB, free 434.4 MiB)
+2026-01-14 15:23:39 INFO  MemoryStore:60 - Block broadcast_0_piece0 stored as bytes in memory (estimated size 12.7 KiB, free 434.3 MiB)
+2026-01-14 15:23:39 INFO  BlockManagerInfo:60 - Added broadcast_0_piece0 in memory on fe11f4b56252:38249 (size: 12.7 KiB, free: 434.4 MiB)
+2026-01-14 15:23:39 INFO  SparkContext:60 - Created broadcast 0 from broadcast at DAGScheduler.scala:1585
+2026-01-14 15:23:39 INFO  DAGScheduler:60 - Submitting 1 missing tasks from ResultStage 0 (MapPartitionsRDD[11] at showString at <unknown>:0) (first 15 tasks are for partitions Vector(0))
+2026-01-14 15:23:39 INFO  TaskSchedulerImpl:60 - Adding task set 0.0 with 1 tasks resource profile 0
+2026-01-14 15:23:39 INFO  TaskSetManager:60 - Starting task 0.0 in stage 0.0 (TID 0) (fe11f4b56252, executor driver, partition 0, PROCESS_LOCAL, 322345 bytes) 
+2026-01-14 15:23:39 INFO  Executor:60 - Running task 0.0 in stage 0.0 (TID 0)
+2026-01-14 15:23:40 INFO  CodeGenerator:60 - Code generated in 139.563025 ms
+2026-01-14 15:23:40 INFO  PythonRunner:60 - Times: total = 850, boot = 824, init = 11, finish = 15
+2026-01-14 15:23:40 INFO  Executor:60 - Finished task 0.0 in stage 0.0 (TID 0). 7397 bytes result sent to driver
+2026-01-14 15:23:40 INFO  TaskSetManager:60 - Finished task 0.0 in stage 0.0 (TID 0) in 1501 ms on fe11f4b56252 (executor driver) (1/1)
+2026-01-14 15:23:40 INFO  TaskSchedulerImpl:60 - Removed TaskSet 0.0, whose tasks have all completed, from pool 
+2026-01-14 15:23:40 INFO  PythonAccumulatorV2:60 - Connected to AccumulatorServer at host: 127.0.0.1 port: 60781
+2026-01-14 15:23:40 INFO  DAGScheduler:60 - ResultStage 0 (showString at <unknown>:0) finished in 1.993 s
+2026-01-14 15:23:40 INFO  DAGScheduler:60 - Job 0 is finished. Cancelling potential speculative or zombie tasks for this job
+2026-01-14 15:23:40 INFO  TaskSchedulerImpl:60 - Killing all running tasks in stage 0: Stage finished
+2026-01-14 15:23:40 INFO  DAGScheduler:60 - Job 0 finished: showString at <unknown>:0, took 2.129682 s
+2026-01-14 15:23:40 INFO  SparkContext:60 - Starting job: showString at <unknown>:0
+2026-01-14 15:23:40 INFO  DAGScheduler:60 - Got job 1 (showString at <unknown>:0) with 4 output partitions
+2026-01-14 15:23:40 INFO  DAGScheduler:60 - Final stage: ResultStage 1 (showString at <unknown>:0)
+2026-01-14 15:23:40 INFO  DAGScheduler:60 - Parents of final stage: List()
+2026-01-14 15:23:40 INFO  DAGScheduler:60 - Missing parents: List()
+2026-01-14 15:23:40 INFO  DAGScheduler:60 - Submitting ResultStage 1 (MapPartitionsRDD[11] at showString at <unknown>:0), which has no missing parents
+2026-01-14 15:23:40 INFO  MemoryStore:60 - Block broadcast_1 stored as values in memory (estimated size 39.4 KiB, free 434.3 MiB)
+2026-01-14 15:23:40 INFO  BlockManagerInfo:60 - Removed broadcast_0_piece0 on fe11f4b56252:38249 in memory (size: 12.7 KiB, free: 434.4 MiB)
+2026-01-14 15:23:40 INFO  MemoryStore:60 - Block broadcast_1_piece0 stored as bytes in memory (estimated size 12.7 KiB, free 434.3 MiB)
+2026-01-14 15:23:40 INFO  BlockManagerInfo:60 - Added broadcast_1_piece0 in memory on fe11f4b56252:38249 (size: 12.7 KiB, free: 434.4 MiB)
+2026-01-14 15:23:40 INFO  SparkContext:60 - Created broadcast 1 from broadcast at DAGScheduler.scala:1585
+2026-01-14 15:23:40 INFO  DAGScheduler:60 - Submitting 4 missing tasks from ResultStage 1 (MapPartitionsRDD[11] at showString at <unknown>:0) (first 15 tasks are for partitions Vector(1, 2, 3, 4))
+2026-01-14 15:23:40 INFO  TaskSchedulerImpl:60 - Adding task set 1.0 with 4 tasks resource profile 0
+2026-01-14 15:23:40 INFO  TaskSetManager:60 - Starting task 0.0 in stage 1.0 (TID 1) (fe11f4b56252, executor driver, partition 1, PROCESS_LOCAL, 235150 bytes) 
+2026-01-14 15:23:40 INFO  TaskSetManager:60 - Starting task 1.0 in stage 1.0 (TID 2) (fe11f4b56252, executor driver, partition 2, PROCESS_LOCAL, 157871 bytes) 
+2026-01-14 15:23:40 INFO  TaskSetManager:60 - Starting task 2.0 in stage 1.0 (TID 3) (fe11f4b56252, executor driver, partition 3, PROCESS_LOCAL, 164368 bytes) 
+2026-01-14 15:23:40 INFO  TaskSetManager:60 - Starting task 3.0 in stage 1.0 (TID 4) (fe11f4b56252, executor driver, partition 4, PROCESS_LOCAL, 194221 bytes) 
+2026-01-14 15:23:40 INFO  Executor:60 - Running task 0.0 in stage 1.0 (TID 1)
+2026-01-14 15:23:40 INFO  Executor:60 - Running task 1.0 in stage 1.0 (TID 2)
+2026-01-14 15:23:40 INFO  Executor:60 - Running task 3.0 in stage 1.0 (TID 4)
+2026-01-14 15:23:40 INFO  Executor:60 - Running task 2.0 in stage 1.0 (TID 3)
+2026-01-14 15:23:40 INFO  PythonRunner:60 - Times: total = 19, boot = -461, init = 473, finish = 7
+2026-01-14 15:23:40 INFO  PythonRunner:60 - Times: total = 36, boot = 8, init = 11, finish = 17
+2026-01-14 15:23:40 INFO  Executor:60 - Finished task 0.0 in stage 1.0 (TID 1). 6620 bytes result sent to driver
+2026-01-14 15:23:40 INFO  Executor:60 - Finished task 1.0 in stage 1.0 (TID 2). 5602 bytes result sent to driver
+2026-01-14 15:23:40 INFO  PythonRunner:60 - Times: total = 68, boot = 22, init = 21, finish = 25
+2026-01-14 15:23:40 INFO  Executor:60 - Finished task 3.0 in stage 1.0 (TID 4). 5946 bytes result sent to driver
+2026-01-14 15:23:40 INFO  TaskSetManager:60 - Finished task 1.0 in stage 1.0 (TID 2) in 224 ms on fe11f4b56252 (executor driver) (1/4)
+2026-01-14 15:23:40 INFO  TaskSetManager:60 - Finished task 0.0 in stage 1.0 (TID 1) in 229 ms on fe11f4b56252 (executor driver) (2/4)
+2026-01-14 15:23:40 INFO  TaskSetManager:60 - Finished task 3.0 in stage 1.0 (TID 4) in 225 ms on fe11f4b56252 (executor driver) (3/4)
+2026-01-14 15:23:40 INFO  PythonRunner:60 - Times: total = 132, boot = 39, init = 41, finish = 52
+2026-01-14 15:23:40 INFO  Executor:60 - Finished task 2.0 in stage 1.0 (TID 3). 5753 bytes result sent to driver
+2026-01-14 15:23:40 INFO  TaskSetManager:60 - Finished task 2.0 in stage 1.0 (TID 3) in 249 ms on fe11f4b56252 (executor driver) (4/4)
+2026-01-14 15:23:40 INFO  TaskSchedulerImpl:60 - Removed TaskSet 1.0, whose tasks have all completed, from pool 
+2026-01-14 15:23:40 INFO  DAGScheduler:60 - ResultStage 1 (showString at <unknown>:0) finished in 0.274 s
+2026-01-14 15:23:40 INFO  DAGScheduler:60 - Job 1 is finished. Cancelling potential speculative or zombie tasks for this job
+2026-01-14 15:23:40 INFO  TaskSchedulerImpl:60 - Killing all running tasks in stage 1: Stage finished
+2026-01-14 15:23:40 INFO  DAGScheduler:60 - Job 1 finished: showString at <unknown>:0, took 0.289697 s
+2026-01-14 15:23:40 INFO  SparkContext:60 - Starting job: showString at <unknown>:0
+2026-01-14 15:23:41 INFO  DAGScheduler:60 - Got job 2 (showString at <unknown>:0) with 3 output partitions
+2026-01-14 15:23:41 INFO  DAGScheduler:60 - Final stage: ResultStage 2 (showString at <unknown>:0)
+2026-01-14 15:23:41 INFO  DAGScheduler:60 - Parents of final stage: List()
+2026-01-14 15:23:41 INFO  DAGScheduler:60 - Missing parents: List()
+2026-01-14 15:23:41 INFO  DAGScheduler:60 - Submitting ResultStage 2 (MapPartitionsRDD[11] at showString at <unknown>:0), which has no missing parents
+2026-01-14 15:23:41 INFO  MemoryStore:60 - Block broadcast_2 stored as values in memory (estimated size 39.4 KiB, free 434.3 MiB)
+2026-01-14 15:23:41 INFO  MemoryStore:60 - Block broadcast_2_piece0 stored as bytes in memory (estimated size 12.7 KiB, free 434.3 MiB)
+2026-01-14 15:23:41 INFO  BlockManagerInfo:60 - Added broadcast_2_piece0 in memory on fe11f4b56252:38249 (size: 12.7 KiB, free: 434.4 MiB)
+2026-01-14 15:23:41 INFO  SparkContext:60 - Created broadcast 2 from broadcast at DAGScheduler.scala:1585
+2026-01-14 15:23:41 INFO  DAGScheduler:60 - Submitting 3 missing tasks from ResultStage 2 (MapPartitionsRDD[11] at showString at <unknown>:0) (first 15 tasks are for partitions Vector(5, 6, 7))
+2026-01-14 15:23:41 INFO  TaskSchedulerImpl:60 - Adding task set 2.0 with 3 tasks resource profile 0
+2026-01-14 15:23:41 INFO  TaskSetManager:60 - Starting task 0.0 in stage 2.0 (TID 5) (fe11f4b56252, executor driver, partition 5, PROCESS_LOCAL, 163282 bytes) 
+2026-01-14 15:23:41 INFO  TaskSetManager:60 - Starting task 1.0 in stage 2.0 (TID 6) (fe11f4b56252, executor driver, partition 6, PROCESS_LOCAL, 86092 bytes) 
+2026-01-14 15:23:41 INFO  TaskSetManager:60 - Starting task 2.0 in stage 2.0 (TID 7) (fe11f4b56252, executor driver, partition 7, PROCESS_LOCAL, 257354 bytes) 
+2026-01-14 15:23:41 INFO  Executor:60 - Running task 0.0 in stage 2.0 (TID 5)
+2026-01-14 15:23:41 INFO  Executor:60 - Running task 1.0 in stage 2.0 (TID 6)
+2026-01-14 15:23:41 INFO  Executor:60 - Running task 2.0 in stage 2.0 (TID 7)
+2026-01-14 15:23:41 INFO  PythonRunner:60 - Times: total = 14, boot = -291, init = 293, finish = 12
+2026-01-14 15:23:41 INFO  Executor:60 - Finished task 0.0 in stage 2.0 (TID 5). 5940 bytes result sent to driver
+2026-01-14 15:23:41 INFO  TaskSetManager:60 - Finished task 0.0 in stage 2.0 (TID 5) in 113 ms on fe11f4b56252 (executor driver) (1/3)
+2026-01-14 15:23:41 INFO  PythonRunner:60 - Times: total = 54, boot = -182, init = 185, finish = 51
+2026-01-14 15:23:41 INFO  PythonRunner:60 - Times: total = 29, boot = -217, init = 227, finish = 19
+2026-01-14 15:23:41 INFO  Executor:60 - Finished task 1.0 in stage 2.0 (TID 6). 4365 bytes result sent to driver
+2026-01-14 15:23:41 INFO  TaskSetManager:60 - Finished task 1.0 in stage 2.0 (TID 6) in 147 ms on fe11f4b56252 (executor driver) (2/3)
+2026-01-14 15:23:41 INFO  Executor:60 - Finished task 2.0 in stage 2.0 (TID 7). 8660 bytes result sent to driver
+2026-01-14 15:23:41 INFO  TaskSetManager:60 - Finished task 2.0 in stage 2.0 (TID 7) in 152 ms on fe11f4b56252 (executor driver) (3/3)
+2026-01-14 15:23:41 INFO  TaskSchedulerImpl:60 - Removed TaskSet 2.0, whose tasks have all completed, from pool 
+2026-01-14 15:23:41 INFO  DAGScheduler:60 - ResultStage 2 (showString at <unknown>:0) finished in 0.190 s
+2026-01-14 15:23:41 INFO  DAGScheduler:60 - Job 2 is finished. Cancelling potential speculative or zombie tasks for this job
+2026-01-14 15:23:41 INFO  TaskSchedulerImpl:60 - Killing all running tasks in stage 2: Stage finished
+2026-01-14 15:23:41 INFO  DAGScheduler:60 - Job 2 finished: showString at <unknown>:0, took 0.204278 s
+2026-01-14 15:23:41 INFO  BlockManagerInfo:60 - Removed broadcast_1_piece0 on fe11f4b56252:38249 in memory (size: 12.7 KiB, free: 434.4 MiB)
+2026-01-14 15:23:41 INFO  BlockManagerInfo:60 - Removed broadcast_2_piece0 on fe11f4b56252:38249 in memory (size: 12.7 KiB, free: 434.4 MiB)
+2026-01-14 15:23:42 INFO  CodeGenerator:60 - Code generated in 45.849788 ms
+2026-01-14 15:24:58 INFO  SparkContext:60 - Starting job: showString at <unknown>:0
+2026-01-14 15:24:58 INFO  DAGScheduler:60 - Got job 3 (showString at <unknown>:0) with 1 output partitions
+2026-01-14 15:24:58 INFO  DAGScheduler:60 - Final stage: ResultStage 3 (showString at <unknown>:0)
+2026-01-14 15:24:58 INFO  DAGScheduler:60 - Parents of final stage: List()
+2026-01-14 15:24:58 INFO  DAGScheduler:60 - Missing parents: List()
+2026-01-14 15:24:58 INFO  DAGScheduler:60 - Submitting ResultStage 3 (MapPartitionsRDD[13] at showString at <unknown>:0), which has no missing parents
+2026-01-14 15:24:58 INFO  MemoryStore:60 - Block broadcast_3 stored as values in memory (estimated size 39.4 KiB, free 434.4 MiB)
+2026-01-14 15:24:58 INFO  MemoryStore:60 - Block broadcast_3_piece0 stored as bytes in memory (estimated size 12.7 KiB, free 434.3 MiB)
+2026-01-14 15:24:58 INFO  BlockManagerInfo:60 - Added broadcast_3_piece0 in memory on fe11f4b56252:38249 (size: 12.7 KiB, free: 434.4 MiB)
+2026-01-14 15:24:58 INFO  SparkContext:60 - Created broadcast 3 from broadcast at DAGScheduler.scala:1585
+2026-01-14 15:24:58 INFO  DAGScheduler:60 - Submitting 1 missing tasks from ResultStage 3 (MapPartitionsRDD[13] at showString at <unknown>:0) (first 15 tasks are for partitions Vector(0))
+2026-01-14 15:24:58 INFO  TaskSchedulerImpl:60 - Adding task set 3.0 with 1 tasks resource profile 0
+2026-01-14 15:24:58 INFO  TaskSetManager:60 - Starting task 0.0 in stage 3.0 (TID 8) (fe11f4b56252, executor driver, partition 0, PROCESS_LOCAL, 322345 bytes) 
+2026-01-14 15:24:58 INFO  Executor:60 - Running task 0.0 in stage 3.0 (TID 8)
+2026-01-14 15:24:58 INFO  PythonRunner:60 - Times: total = 44, boot = 7, init = 10, finish = 27
+2026-01-14 15:24:58 INFO  Executor:60 - Finished task 0.0 in stage 3.0 (TID 8). 7397 bytes result sent to driver
+2026-01-14 15:24:58 INFO  TaskSetManager:60 - Finished task 0.0 in stage 3.0 (TID 8) in 178 ms on fe11f4b56252 (executor driver) (1/1)
+2026-01-14 15:24:58 INFO  TaskSchedulerImpl:60 - Removed TaskSet 3.0, whose tasks have all completed, from pool 
+2026-01-14 15:24:58 INFO  DAGScheduler:60 - ResultStage 3 (showString at <unknown>:0) finished in 0.217 s
+2026-01-14 15:24:58 INFO  DAGScheduler:60 - Job 3 is finished. Cancelling potential speculative or zombie tasks for this job
+2026-01-14 15:24:58 INFO  TaskSchedulerImpl:60 - Killing all running tasks in stage 3: Stage finished
+2026-01-14 15:24:58 INFO  DAGScheduler:60 - Job 3 finished: showString at <unknown>:0, took 0.246093 s
+2026-01-14 15:24:58 INFO  SparkContext:60 - Starting job: showString at <unknown>:0
+2026-01-14 15:24:58 INFO  DAGScheduler:60 - Got job 4 (showString at <unknown>:0) with 4 output partitions
+2026-01-14 15:24:58 INFO  DAGScheduler:60 - Final stage: ResultStage 4 (showString at <unknown>:0)
+2026-01-14 15:24:58 INFO  DAGScheduler:60 - Parents of final stage: List()
+2026-01-14 15:24:58 INFO  DAGScheduler:60 - Missing parents: List()
+2026-01-14 15:24:58 INFO  DAGScheduler:60 - Submitting ResultStage 4 (MapPartitionsRDD[13] at showString at <unknown>:0), which has no missing parents
+2026-01-14 15:24:58 INFO  MemoryStore:60 - Block broadcast_4 stored as values in memory (estimated size 39.4 KiB, free 434.3 MiB)
+2026-01-14 15:24:58 INFO  MemoryStore:60 - Block broadcast_4_piece0 stored as bytes in memory (estimated size 12.7 KiB, free 434.3 MiB)
+2026-01-14 15:24:58 INFO  BlockManagerInfo:60 - Added broadcast_4_piece0 in memory on fe11f4b56252:38249 (size: 12.7 KiB, free: 434.4 MiB)
+2026-01-14 15:24:58 INFO  SparkContext:60 - Created broadcast 4 from broadcast at DAGScheduler.scala:1585
+2026-01-14 15:24:58 INFO  DAGScheduler:60 - Submitting 4 missing tasks from ResultStage 4 (MapPartitionsRDD[13] at showString at <unknown>:0) (first 15 tasks are for partitions Vector(1, 2, 3, 4))
+2026-01-14 15:24:58 INFO  TaskSchedulerImpl:60 - Adding task set 4.0 with 4 tasks resource profile 0
+2026-01-14 15:24:58 INFO  TaskSetManager:60 - Starting task 0.0 in stage 4.0 (TID 9) (fe11f4b56252, executor driver, partition 1, PROCESS_LOCAL, 235150 bytes) 
+2026-01-14 15:24:58 INFO  TaskSetManager:60 - Starting task 1.0 in stage 4.0 (TID 10) (fe11f4b56252, executor driver, partition 2, PROCESS_LOCAL, 157871 bytes) 
+2026-01-14 15:24:58 INFO  TaskSetManager:60 - Starting task 2.0 in stage 4.0 (TID 11) (fe11f4b56252, executor driver, partition 3, PROCESS_LOCAL, 164368 bytes) 
+2026-01-14 15:24:58 INFO  TaskSetManager:60 - Starting task 3.0 in stage 4.0 (TID 12) (fe11f4b56252, executor driver, partition 4, PROCESS_LOCAL, 194221 bytes) 
+2026-01-14 15:24:58 INFO  Executor:60 - Running task 0.0 in stage 4.0 (TID 9)
+2026-01-14 15:24:58 INFO  Executor:60 - Running task 1.0 in stage 4.0 (TID 10)
+2026-01-14 15:24:58 INFO  Executor:60 - Running task 2.0 in stage 4.0 (TID 11)
+2026-01-14 15:24:58 INFO  Executor:60 - Running task 3.0 in stage 4.0 (TID 12)
+2026-01-14 15:24:58 INFO  PythonRunner:60 - Times: total = 45, boot = -129, init = 132, finish = 42
+2026-01-14 15:24:58 INFO  Executor:60 - Finished task 1.0 in stage 4.0 (TID 10). 5602 bytes result sent to driver
+2026-01-14 15:24:58 INFO  TaskSetManager:60 - Finished task 1.0 in stage 4.0 (TID 10) in 81 ms on fe11f4b56252 (executor driver) (1/4)
+2026-01-14 15:24:58 INFO  PythonRunner:60 - Times: total = 25, boot = 8, init = 6, finish = 11
+2026-01-14 15:24:58 INFO  Executor:60 - Finished task 3.0 in stage 4.0 (TID 12). 5946 bytes result sent to driver
+2026-01-14 15:24:58 INFO  TaskSetManager:60 - Finished task 3.0 in stage 4.0 (TID 12) in 87 ms on fe11f4b56252 (executor driver) (2/4)
+2026-01-14 15:24:58 INFO  PythonRunner:60 - Times: total = 83, boot = 17, init = 11, finish = 55
+2026-01-14 15:24:58 INFO  Executor:60 - Finished task 2.0 in stage 4.0 (TID 11). 5710 bytes result sent to driver
+2026-01-14 15:24:58 INFO  TaskSetManager:60 - Finished task 2.0 in stage 4.0 (TID 11) in 146 ms on fe11f4b56252 (executor driver) (3/4)
+2026-01-14 15:24:58 INFO  PythonRunner:60 - Times: total = 86, boot = 13, init = 20, finish = 53
+2026-01-14 15:24:59 INFO  Executor:60 - Finished task 0.0 in stage 4.0 (TID 9). 6620 bytes result sent to driver
+2026-01-14 15:24:59 INFO  TaskSetManager:60 - Finished task 0.0 in stage 4.0 (TID 9) in 181 ms on fe11f4b56252 (executor driver) (4/4)
+2026-01-14 15:24:59 INFO  TaskSchedulerImpl:60 - Removed TaskSet 4.0, whose tasks have all completed, from pool 
+2026-01-14 15:24:59 INFO  DAGScheduler:60 - ResultStage 4 (showString at <unknown>:0) finished in 0.214 s
+2026-01-14 15:24:59 INFO  DAGScheduler:60 - Job 4 is finished. Cancelling potential speculative or zombie tasks for this job
+2026-01-14 15:24:59 INFO  TaskSchedulerImpl:60 - Killing all running tasks in stage 4: Stage finished
+2026-01-14 15:24:59 INFO  DAGScheduler:60 - Job 4 finished: showString at <unknown>:0, took 0.239384 s
+2026-01-14 15:24:59 INFO  BlockManagerInfo:60 - Removed broadcast_3_piece0 on fe11f4b56252:38249 in memory (size: 12.7 KiB, free: 434.4 MiB)
+2026-01-14 15:24:59 INFO  BlockManagerInfo:60 - Removed broadcast_4_piece0 on fe11f4b56252:38249 in memory (size: 12.7 KiB, free: 434.4 MiB)
+2026-01-14 15:28:50 INFO  SparkContext:60 - Invoking stop() from shutdown hook
+2026-01-14 15:28:50 INFO  SparkContext:60 - SparkContext is stopping with exitCode 0.
+2026-01-14 15:28:50 INFO  SparkUI:60 - Stopped Spark web UI at http://fe11f4b56252:4040
+2026-01-14 15:28:50 INFO  MapOutputTrackerMasterEndpoint:60 - MapOutputTrackerMasterEndpoint stopped!
+2026-01-14 15:28:50 INFO  MemoryStore:60 - MemoryStore cleared
+2026-01-14 15:28:50 INFO  BlockManager:60 - BlockManager stopped
+2026-01-14 15:28:50 INFO  BlockManagerMaster:60 - BlockManagerMaster stopped
+2026-01-14 15:28:50 INFO  OutputCommitCoordinator$OutputCommitCoordinatorEndpoint:60 - OutputCommitCoordinator stopped!
+2026-01-14 15:28:50 INFO  SparkContext:60 - Successfully stopped SparkContext
+2026-01-14 15:28:50 INFO  ShutdownHookManager:60 - Shutdown hook called
+2026-01-14 15:28:50 INFO  ShutdownHookManager:60 - Deleting directory /tmp/spark-9f7cbf2a-476e-4e94-9410-cd6ed1660236
+2026-01-14 15:28:50 INFO  ShutdownHookManager:60 - Deleting directory /tmp/spark-81fc2823-9a83-4721-8a88-0d1cd0f2404f
+2026-01-14 15:28:50 INFO  ShutdownHookManager:60 - Deleting directory /tmp/spark-9f7cbf2a-476e-4e94-9410-cd6ed1660236/pyspark-88476c15-bdec-4ad1-8b14-a6841c5712a3
