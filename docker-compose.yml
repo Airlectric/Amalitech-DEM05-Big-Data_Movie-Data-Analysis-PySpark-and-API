@@ -1,0 +1,12 @@
+
+services:
+  pyspark-jupyter:
+    build: .
+    container_name: pyspark_jupyter
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/workspace
+    environment:
+      - SPARK_MODE=local
+    restart: unless-stopped
