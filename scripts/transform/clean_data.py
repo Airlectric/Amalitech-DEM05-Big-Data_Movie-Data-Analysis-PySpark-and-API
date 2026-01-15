@@ -1,327 +1,310 @@
+from pyspark.sql import functions as F
+from pyspark.sql.types import StringType, ArrayType
+from ..utils.logger_config import logger
 from pyspark.sql import DataFrame
-from pyspark.sql.functions import (
-    col, when, lit, size, concat_ws, explode, collect_list,
-    lower, trim, coalesce, isnan
-)
-from pyspark.sql.types import StringType
-import logging
-
-logger = logging.getLogger(__name__)
 
 
-def drop_irrelevant_columns(movies_df: DataFrame, columns_to_drop: list) -> DataFrame:
+def drop_irrelevant_columns(movies_df, columns_to_drop):
     """Drops irrelevant columns from the movie data."""
     logger.info(f"Dropping columns: {columns_to_drop}")
-    
-    existing_cols = set(movies_df.columns)
-    cols_to_drop = [c for c in columns_to_drop if c in existing_cols]
-    
-    if cols_to_drop:
-        return movies_df.drop(*cols_to_drop)
+    existing = [c for c in columns_to_drop if c in movies_df.columns]
+    if existing:
+        movies_df = movies_df.drop(*existing)
     return movies_df
 
 
-def extract_json_field(df: DataFrame, col: str, key: str, join_with: str = "|") -> DataFrame:
+def extract_json_field(
+    df: DataFrame,
+    col: str,
+    key: str,
+    join_with: str = "|"
+) -> DataFrame:
     """
-    Extract values from nested JSON-like structures in a DataFrame column.
-    - dict  -> value of key
-    - list  -> joined values of key from each item
-    - else  -> null
+    - map -> extract value by key
+    - array<map> -> extract key from each element and join
     """
-    from pyspark.sql.functions import udf
-    
-    logger.info(f"Extracting field '{key}' from column '{col}'")
-    
-    @udf(returnType=StringType())
-    def extract_struct(value):
-        if value is None:
-            return None
-        if isinstance(value, dict):
-            return value.get(key)
-        if isinstance(value, list):
-            values = [item.get(key, "") for item in value if isinstance(item, dict) and key in item]
-            if values:
-                return join_with.join(values)
-        return None
-    
-    return df.withColumn(col, extract_struct(col(col)))
 
-
-def extract_credit_json_fields(df: DataFrame, col: str = 'credits', join_with: str = "|") -> DataFrame:
-    """Extracts cast and crew information from the credits column."""
-    logger.info(f"Extracting cast & crew from column '{col}'")
-    
-    # Cast names - explode + collect_list + concat_ws
-    df = df.withColumn("cast_temp", explode(col(f"{col}.cast").getField("name")))\
-           .groupBy([c for c in df.columns if c != col and c != "cast_temp"])\
-           .agg(concat_ws(join_with, collect_list("cast_temp")).alias("cast"))
-    
-    # Sizes + director using native functions + minimal UDF
-    from pyspark.sql.functions import udf
-    
-    @udf(returnType=StringType())
-    def get_directors(crew_list):
-        if not isinstance(crew_list, list):
-            return None
-        dirs = [m.get("name", "") for m in crew_list 
-                if isinstance(m, dict) and m.get("job") == "Director"]
-        return join_with.join(dirs) if dirs else None
-    
-    df = df.withColumn("cast_size", size(coalesce(col(f"{col}.cast"), lit([]))))\
-           .withColumn("director", get_directors(col(f"{col}.crew")))\
-           .withColumn("crew_size", size(coalesce(col(f"{col}.crew"), lit([]))))\
-           .drop(col)
-    
-    logger.info(f"Finished extracting credits – dropped original '{col}' column")
-    return df
-
-
-def extract_production_countries(df: DataFrame, col: str = 'origin_country', join_with: str = "|") -> DataFrame:
-    """Extracts country codes/names from the production_countries/origin_country column."""
-    logger.info(f"Extracting production countries from column '{col}'")
-    
     return df.withColumn(
         col,
-        concat_ws(join_with, col(col))
+        F.when(
+            F.col(col).isNull(),
+            F.lit(None)
+        )
+        # array<map>
+        .when(
+            F.expr(f"typeof({col}) LIKE 'array%'"),
+            F.concat_ws(
+                join_with,
+                F.expr(f"transform({col}, x -> x['{key}'])")
+            )
+        )
+        # map
+        .otherwise(F.col(col)[key])
     )
 
 
-def inspect_categorical_columns_using_value_counts(df: DataFrame, cols: list):
-    """Prints value counts for specified categorical columns (driver-side operation)."""
-    logger.info(f"Inspecting value counts for columns: {cols}")
-    
-    for c in cols:
-        if c in df.columns:
-            print(f"Value counts for column: ====== {c} ======")
-            df.groupBy(c).count().orderBy("count", ascending=False).show(truncate=False)
-            print("\n")
-        else:
-            print(f"Column '{c}' not found in DataFrame\n")
+def extract_credit_json_fields(
+    df: DataFrame,
+    col: str = "credits",
+    join_with: str = "|"
+) -> DataFrame:
+
+    df = (
+        df
+        # Cast names
+        .withColumn(
+            "cast",
+            F.concat_ws(
+                join_with,
+                F.expr(
+                    f"""
+                    transform(
+                        {col}['cast'],
+                        x -> x['name']
+                    )
+                    """
+                )
+            )
+        )
+
+        # Cast size
+        .withColumn(
+            "cast_size",
+            F.size(F.col(col)["cast"])
+        )
+
+        # Directors only
+        .withColumn(
+            "director",
+            F.concat_ws(
+                join_with,
+                F.expr(
+                    f"""
+                    transform(
+                        filter({col}['crew'], x -> x['job'] = 'Director'),
+                        x -> x['name']
+                    )
+                    """
+                )
+            )
+        )
+
+        # Crew size
+        .withColumn(
+            "crew_size",
+            F.size(F.col(col)["crew"])
+        )
+
+        .drop(col)
+    )
+
+    return df
+
+def extract_production_countries(
+    df: DataFrame,
+    col: str = "origin_country",
+    join_with: str = "|"
+) -> DataFrame:
+
+    return df.withColumn(
+        col,
+        F.concat_ws(join_with, F.col(col))
+    )
 
 
-def convert_numeric(df: DataFrame, cols: list) -> DataFrame:
-    """Converts specified columns to numeric types, null on error."""
-    logger.info(f"Converting columns to numeric: {cols}")
-    
+
+def inspect_categorical_columns_using_value_counts(df, cols):
+    """Show value counts (driver action - use only for small/medium data!)"""
+    logger.info(f"Inspecting value counts for: {cols}")
+    for c in [col for col in cols if col in df.columns]:
+        print(f"\nValue counts for ====== {c} ======")
+        df.groupBy(c).count().orderBy(F.desc("count")).show(20, truncate=False)
+
+
+def convert_numeric(df, cols):
+    """Cast to double (safer than float)"""
+    logger.info(f"Converting to numeric: {cols}")
     for c in cols:
         if c in df.columns:
-            df = df.withColumn(c, col(c).cast("double"))
+            df = df.withColumn(c, F.col(c).cast("double"))
     return df
 
 
-def convert_to_datetime(df: DataFrame, cols: list) -> DataFrame:
-    """Converts specified columns to date/timestamp, null on error."""
-    logger.info(f"Converting columns to datetime: {cols}")
-    
+def convert_to_datetime(df, cols):
+    """release_date is string → convert to date"""
+    logger.info(f"Converting to date: {cols}")
     for c in cols:
         if c in df.columns:
-            df = df.withColumn(c, col(c).cast("date"))  # or "timestamp" if needed
+            df = df.withColumn(c, F.to_date(F.col(c), "yyyy-MM-dd"))
     return df
 
 
 def clean_movie_data(movies_df: DataFrame) -> DataFrame:
     """
-    Cleans and preprocesses the movie data - PySpark version
-    
-    This function orchestrates all the individual cleaning steps
-    using the previously defined Spark-compatible functions.
+    Full PySpark cleaning pipeline
     """
-    logger.info("Starting clean_movie_data pipeline (Spark version)")
 
-    # ─── JSON-like column extractions ───────────────────────────────────────
     json_columns = {
-        'belongs_to_collection': 'name',
-        'genres': 'name',
-        'spoken_languages': 'english_name',
-        'production_companies': 'name',
-        'production_countries': 'name',     # Note: will be overridden below
+        "belongs_to_collection": "name",
+        "genres": "name",
+        "spoken_languages": "english_name",
+        "production_companies": "name",
+        "production_countries": "name",
     }
 
-    for col_name, key in json_columns.items():
-        if col_name in movies_df.columns:
-            movies_df = extract_json_field(movies_df, col_name, key)
-            logger.debug(f"Extracted '{key}' from column '{col_name}'")
+    for col, key in json_columns.items():
+        movies_df = extract_json_field(movies_df, col, key)
 
-    # Special handling for origin_country/production_countries (list of strings/codes)
-    if 'origin_country' in movies_df.columns:
-        movies_df = extract_production_countries(movies_df, col='origin_country')
-    elif 'production_countries' in movies_df.columns:
-        movies_df = extract_production_countries(movies_df, col='production_countries')
+    movies_df = extract_production_countries(
+        movies_df, col="origin_country"
+    )
 
-    # ─── Credits extraction (cast, director, sizes) ──────────────────────────
-    if 'credits' in movies_df.columns:
-        movies_df = extract_credit_json_fields(movies_df, col='credits')
+    movies_df = extract_credit_json_fields(
+        movies_df, col="credits"
+    )
 
-    # ─── Type conversions ────────────────────────────────────────────────────
+    # Numeric casting (already numeric but enforced)
     numeric_columns = [
-        'budget', 'popularity', 'id', 'revenue',
-        'runtime', 'vote_average', 'vote_count'
+        "budget", "popularity", "id", "revenue",
+        "runtime", "vote_average", "vote_count"
     ]
-    movies_df = convert_numeric(movies_df, numeric_columns)
 
-    date_columns = ['release_date']
-    movies_df = convert_to_datetime(movies_df, date_columns)
+    for c in numeric_columns:
+        movies_df = movies_df.withColumn(c, F.col(c).cast("double"))
 
-    logger.info("Finished clean_movie_data pipeline (Spark version)")
-    
-    # If this DataFrame will be reused multiple times downstream:
-    # return movies_df.cache()
-    
+    # Date conversion
+    movies_df = movies_df.withColumn(
+        "release_date",
+        F.to_date("release_date", "yyyy-MM-dd")
+    )
+
     return movies_df
 
 
-def replace_zero_values(df: DataFrame) -> DataFrame:
-    """Replaces unrealistic placeholder values (0) with null."""
-    logger.info("Replacing zero values in budget, revenue, runtime with NaN")
-    
-    return df.withColumn("budget",
-                when(col("budget") == 0, lit(None)).otherwise(col("budget")))\
-             .withColumn("revenue",
-                when(col("revenue") == 0, lit(None)).otherwise(col("revenue")))\
-             .withColumn("runtime",
-                when(col("runtime") == 0, lit(None)).otherwise(col("runtime")))
+
+def replace_zero_values(df):
+    logger.info("Replacing 0 → NULL in budget/revenue/runtime")
+    for c in ['budget', 'revenue', 'runtime']:
+        if c in df.columns:
+            df = df.withColumn(c, F.when(F.col(c) == 0, None).otherwise(F.col(c)))
+    return df
 
 
-def convert_budget_to_millions(df: DataFrame) -> DataFrame:
-    """Converts budget & revenue from dollars to millions of dollars."""
-    logger.info("Converting budget & revenue to millions of USD")
-    
-    return df.withColumn("budget_musd", col("budget") / 1000000.0)\
-             .withColumn("revenue_musd", col("revenue") / 1000000.0)\
-             .drop("budget", "revenue")
+def convert_budget_to_millions(df):
+    logger.info("Converting budget & revenue to millions USD")
+    df = df.withColumn("budget_musd", F.round(F.col("budget") / 1000000, 4)) \
+           .withColumn("revenue_musd", F.round(F.col("revenue") / 1000000, 4)) \
+           .drop("budget", "revenue")
+    return df
 
 
-def clean_text_placeholders(df: DataFrame) -> DataFrame:
-    """Cleans text placeholders in tagline & overview."""
-    logger.info("Cleaning placeholder text in tagline & overview")
-    
-    bad_values = ["no tagline", "no overview", "no data", ""]
-    
-    for field in ["tagline", "overview"]:
-        if field in df.columns:
+def clean_text_placeholders(df):
+    logger.info("Cleaning placeholder texts")
+    placeholders = ["no tagline", "no overview", "no data", ""]
+    for col in ['tagline', 'overview']:
+        if col in df.columns:
             df = df.withColumn(
-                field,
-                when(
-                    lower(trim(coalesce(col(field), lit("")))).isin(bad_values),
-                    lit(None)
-                ).otherwise(col(field))
+                col,
+                F.when(
+                    F.lower(F.trim(F.coalesce(F.col(col), F.lit("")))).isin(placeholders),
+                    None
+                ).otherwise(F.col(col))
             )
     return df
 
 
-def adjust_vote_average(df: DataFrame) -> DataFrame:
-    """Sets vote_average to null where vote_count is zero."""
-    logger.info("Setting vote_average to NaN when vote_count == 0")
-    
-    if "vote_count" in df.columns and "vote_average" in df.columns:
+def adjust_vote_average(df):
+    logger.info("Nullifying vote_average when vote_count = 0")
+    if all(c in df.columns for c in ['vote_count', 'vote_average']):
         df = df.withColumn(
             "vote_average",
-            when(col("vote_count") == 0, lit(None)).otherwise(col("vote_average"))
+            F.when(F.col("vote_count") == 0, None).otherwise(F.col("vote_average"))
         )
     return df
 
 
-def remove_duplicates(df: DataFrame) -> DataFrame:
-    """Removes duplicate rows from the DataFrame."""
-    logger.info("Removing duplicate rows")
-    
+def replace_unrealistic_values(df):
+    logger.info("Starting replace_unrealistic_values pipeline")
+    df = replace_zero_values(df)
+    df = convert_budget_to_millions(df)
+    df = clean_text_placeholders(df)
+    df = adjust_vote_average(df)
+    logger.info("Finished replace_unrealistic_values pipeline")
+    return df
+
+
+def remove_duplicates(df):
+    logger.info("Removing duplicates")
+    before = df.count()
     if "id" in df.columns:
-        before = df.count()
         df = df.dropDuplicates(["id"])
-        logger.info(f"After id-based deduplication: {df.count()} rows (removed {before - df.count()})")
     else:
-        before = df.count()
         df = df.dropDuplicates()
-        logger.info(f"After full-row deduplication: {df.count()} rows (removed {before - df.count()})")
-    
+    logger.info(f"After deduplication: {df.count()} rows (removed {before - df.count()})")
     return df
 
 
-def drop_rows_with_na_in_critical_columns(df: DataFrame, critical_columns: list) -> DataFrame:
-    """Drops rows with null values in critical columns."""
-    present_crits = [c for c in critical_columns if c in df.columns]
-    
-    if not present_crits:
-        logger.info("No critical columns found to drop NA on")
-        return df
-    
-    logger.info(f"Dropping rows with NA in critical columns: {present_crits}")
-    
+def drop_rows_with_na_in_critical_columns(df, critical_columns):
+    present = [c for c in critical_columns if c in df.columns]
+    if present:
+        before = df.count()
+        df = df.dropna(subset=present)
+        logger.info(f"After dropping NA in critical: {df.count()} rows (removed {before - df.count()})")
+    return df
+
+
+def keep_rows_with_min_non_nan(df, min_non_nan=10):
+    """Warning: expensive on very large datasets — consider skipping or sampling"""
+    logger.info(f"Filtering rows with >= {min_non_nan} non-null values")
     before = df.count()
-    df = df.dropna(subset=present_crits)
+    count_non_null = sum(F.when(F.col(c).isNotNull(), 1).otherwise(0) for c in df.columns)
+    df = df.withColumn("_nn_count", count_non_null)\
+           .filter(F.col("_nn_count") >= min_non_nan)\
+           .drop("_nn_count")
     after = df.count()
-    
-    logger.info(f"Rows removed: {before - after} | Remaining: {after}")
+    logger.info(f"After min non-null filter: {after} rows (removed {before - after})")
     return df
 
 
-def keep_rows_with_min_non_nan(df: DataFrame, min_non_nan: int = 10) -> DataFrame:
-    """
-    Keeps rows with at least min_non_nan non-null values.
-    WARNING: Expensive on very wide tables - use carefully
-    """
-    logger.info(f"Keeping only rows with >= {min_non_nan} non-null values")
-    
-    from pyspark.sql.functions import sum as sum_
-    
-    before = df.count()
-    
-    non_null_expr = sum_(when(col(c).isNotNull(), 1).otherwise(0) for c in df.columns)
-    
-    df = df.withColumn("_non_null_count", non_null_expr)\
-           .filter(col("_non_null_count") >= min_non_nan)\
-           .drop("_non_null_count")
-    
-    after = df.count()
-    logger.info(f"Rows removed: {before - after} | Remaining: {after}")
-    
-    return df
-
-
-def filter_released_movies(df: DataFrame) -> DataFrame:
-    """Filters for released movies only and drops status column."""
-    logger.info("Filtering for released movies only")
-    
+def filter_released_movies(df):
     if "status" in df.columns:
         before = df.count()
-        df = df.filter(col("status") == "Released").drop("status")
-        after = df.count()
-        logger.info(f"Kept only Released movies: {after} (removed {before - after})")
-    else:
-        logger.info("No 'status' column found – skipping released-movie filter")
-    
+        df = df.filter(F.col("status") == "Released").drop("status")
+        logger.info(f"Kept Released only: {df.count()} (removed {before - df.count()})")
     return df
 
 
-def reorder_columns(df: DataFrame, desired_order: list) -> DataFrame:
-    """Reorders DataFrame columns based on the desired order."""
-    logger.info("Reordering columns according to desired order")
-    
+def removing_na_and_duplicates(df):
+    logger.info("Starting NA & duplicate removal pipeline")
+    df = remove_duplicates(df)
+    df = drop_rows_with_na_in_critical_columns(df, ["title", "id"])
+    df = keep_rows_with_min_non_nan(df, 10)          # ← consider disabling on huge data
+    df = filter_released_movies(df)
+    logger.info(f"Final size after cleaning: {df.count()} rows")
+    return df
+
+
+def reorder_columns(df, desired_order):
     existing = [c for c in desired_order if c in df.columns]
     remaining = [c for c in df.columns if c not in existing]
-    
     return df.select(*(existing + remaining))
 
 
-def reset_index(df: DataFrame) -> DataFrame:
-    """In Spark there is no index like pandas -> this function is usually a no-op"""
-    logger.info("reset_index() called - no effect in Spark DataFrame (no pandas-style index)")
+def reset_index(df):
+    # Spark DataFrames don't have indexes like pandas → usually no-op
+    # If you really need row number:
+    # df = df.withColumn("row_id", F.monotonically_increasing_id())
     return df
 
 
-def finalize_dataframe(df: DataFrame) -> DataFrame:
-    """Finalizes the DataFrame by reordering columns (reset_index is no-op in Spark)."""
-    logger.info("Finalizing DataFrame (reordering columns)")
-    
+def finalize_dataframe(df):
     desired_order = [
         'id', 'title', 'tagline', 'release_date', 'genres', 'belongs_to_collection',
         'original_language', 'budget_musd', 'revenue_musd', 'production_companies',
         'production_countries', 'vote_count', 'vote_average', 'popularity', 'runtime',
-        'overview', 'spoken_languages', 'poster_path', 'cast', 'cast_size',
-        'director', 'crew_size'
+        'overview', 'spoken_languages', 'poster_path', 'cast', 'cast_size', 'director', 'crew_size'
     ]
-    
     df = reorder_columns(df, desired_order)
-    
-    logger.info(f"DataFrame finalized – {df.count()} rows × {len(df.columns)} columns")
+    df = reset_index(df)
+    logger.info(f"Finalized – rows: {df.count()}, columns: {len(df.columns)}")
     return df
