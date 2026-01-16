@@ -4,9 +4,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# =============================================================================
+#--------------------------------------------------------------------
 # 1. Drop irrelevant columns
-# =============================================================================
+#--------------------------------------------------------------------
 def drop_irrelevant_columns(movies_df, columns_to_drop):
     """Drops irrelevant columns from the movie data."""
     logger.info(f"Dropping columns: {columns_to_drop}")
@@ -16,9 +16,9 @@ def drop_irrelevant_columns(movies_df, columns_to_drop):
     return movies_df
 
 
-# =============================================================================
+#--------------------------------------------------------------------
 # 2. Extract field from nested array<struct> or struct
-# =============================================================================
+#--------------------------------------------------------------------
 def extract_json_field(df, col, key, join_with="|"):
     """
     Extract field from:
@@ -51,9 +51,9 @@ def extract_json_field(df, col, key, join_with="|"):
     return df.withColumn(col, F.lit(None))
 
 
-# =============================================================================
+#--------------------------------------------------------------------
 # 3. Special handling for credits (cast + director + sizes)
-# =============================================================================
+#--------------------------------------------------------------------
 def extract_credit_json_fields(df, col='credits', join_with="|"):
     """Extract cast names, director(s), cast_size, crew_size from credits"""
     logger.info(f"Extracting cast & crew from column '{col}'")
@@ -107,9 +107,9 @@ def extract_credit_json_fields(df, col='credits', join_with="|"):
     return df
 
 
-# =============================================================================
+#--------------------------------------------------------------------
 # 4. Origin / Production countries (already array types)
-# =============================================================================
+#--------------------------------------------------------------------
 def extract_production_countries(df, col='origin_country', join_with="|"):
     """Join array<string> or array<struct> country fields"""
     logger.info(f"Extracting/joining countries from column '{col}'")
@@ -138,9 +138,9 @@ def extract_production_countries(df, col='origin_country', join_with="|"):
     return df.withColumn(col, F.lit(None))
 
 
-# =============================================================================
+#--------------------------------------------------------------------
 # 5. Inspect value counts (driver action - small data only!)
-# =============================================================================
+#--------------------------------------------------------------------
 def inspect_categorical_columns_using_value_counts(df, cols):
     """Show value counts (use only on small/medium data!)"""
     logger.info(f"Inspecting value counts for columns: {cols}")
@@ -152,9 +152,9 @@ def inspect_categorical_columns_using_value_counts(df, cols):
             print(f"Column '{c}' not found.\n")
 
 
-# =============================================================================
+#--------------------------------------------------------------------
 # 6. Convert numeric columns
-# =============================================================================
+#--------------------------------------------------------------------
 def convert_numeric(df, cols):
     """Cast columns to double (safe)"""
     logger.info(f"Converting columns to numeric: {cols}")
@@ -164,9 +164,9 @@ def convert_numeric(df, cols):
     return df
 
 
-# =============================================================================
+#--------------------------------------------------------------------
 # 7. Convert to date
-# =============================================================================
+#--------------------------------------------------------------------
 def convert_to_datetime(df, cols):
     """Convert string dates to date type"""
     logger.info(f"Converting columns to date: {cols}")
@@ -176,9 +176,9 @@ def convert_to_datetime(df, cols):
     return df
 
 
-# =============================================================================
+#--------------------------------------------------------------------
 # 8. Main cleaning pipeline
-# =============================================================================
+#--------------------------------------------------------------------
 def clean_movie_data(movies_df):
     """Main cleaning pipeline - PySpark version"""
     logger.info("Starting clean_movie_data pipeline")
@@ -216,9 +216,9 @@ def clean_movie_data(movies_df):
     return movies_df
 
 
-# =============================================================================
+#--------------------------------------------------------------------
 # 9. Replace unrealistic / placeholder values
-# =============================================================================
+#--------------------------------------------------------------------
 def replace_zero_values(df):
     """Replace 0 → null in money & runtime"""
     logger.info("Replacing zero values → null in budget/revenue/runtime")
@@ -277,9 +277,9 @@ def replace_unrealistic_values(df):
     return df
 
 
-# =============================================================================
+#--------------------------------------------------------------------
 # 10. Remove duplicates & NA filtering
-# =============================================================================
+#--------------------------------------------------------------------
 def remove_duplicates(df):
     """Remove duplicate rows (prefer by id)"""
     logger.info("Removing duplicate rows")
@@ -340,9 +340,9 @@ def removing_na_and_duplicates(df):
     return df
 
 
-# =============================================================================
+#--------------------------------------------------------------------
 # 11. Finalize (ordering + reset index equivalent)
-# =============================================================================
+#--------------------------------------------------------------------
 def reorder_columns(df, desired_order):
     """Reorder columns - keep only existing ones"""
     logger.info("Reordering columns")
