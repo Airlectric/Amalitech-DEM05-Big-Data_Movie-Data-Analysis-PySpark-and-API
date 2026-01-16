@@ -9,6 +9,8 @@ services:
       - "8888:8888"
     volumes:
       - .:/workspace
+      - /logs:/logs
+      - ./conf/log4j.properties:/opt/spark/conf/log4j.properties
     environment:
       - SPARK_MODE=local
     restart: unless-stopped
