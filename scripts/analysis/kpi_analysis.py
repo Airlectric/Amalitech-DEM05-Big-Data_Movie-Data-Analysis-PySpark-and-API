@@ -37,30 +37,17 @@ def calculate_roi(df):
 #--------------------------------------------------------------------
 # 3. Rank top/bottom N movies by a metric
 #--------------------------------------------------------------------
-def rank_movies(df, metric, ascending=False, top_n=10):
-    """
-    Returns top N movies ranked by a given metric
-    """
-    logger.info(f"Ranking top {top_n} movies by '{metric}' (ascending={ascending})")
-    
-    if metric not in df.columns:
-        logger.warning(f"Metric '{metric}' not found in DataFrame")
-        return df.limit(0)  # empty result
-
-    return df.orderBy(F.col(metric).asc() if ascending else F.col(metric).desc()) \
-             .limit(top_n)
-
-
-#----------------------------------------------------------
-# KPI CALCULATIONS FOR TMDB MOVIE DATA 
-#----------------------------------------------------
-
 def rank_movies(df, metric, ascending=False, limit=10):
     """
     Generic ranking helper
     """
     order_col = F.col(metric).asc() if ascending else F.col(metric).desc()
     return df.orderBy(order_col).limit(limit)
+
+
+#----------------------------------------------------------
+# KPI CALCULATIONS FOR TMDB MOVIE DATA 
+#----------------------------------------------------
 
 
 #-------------------------------------------------------
@@ -210,7 +197,7 @@ def franchise_vs_standalone(df):
 
     df = df.withColumn(
         "is_franchise",
-        F.when(F.col("belongs_to_collection_name").isNotNull(), True).otherwise(False)
+        F.when(F.col("belongs_to_collection").isNotNull(), True).otherwise(False)
     )
 
     grouped = df.groupBy("is_franchise").agg(
@@ -235,9 +222,9 @@ def franchise_success(df):
     """
     logger.info("Analyzing most successful movie franchises by total revenue")
 
-    df = df.filter(F.col("belongs_to_collection_name").isNotNull())
+    df = df.filter(F.col("belongs_to_collection").isNotNull())
 
-    grouped = df.groupBy("belongs_to_collection_name").agg(
+    grouped = df.groupBy("belongs_to_collection").agg(
         F.count("id").alias("count_movies"),
         F.sum("budget_musd").alias("total_budget_musd"),
         F.mean("budget_musd").alias("mean_budget_musd"),
