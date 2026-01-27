@@ -283,13 +283,13 @@ def replace_unrealistic_values(df):
 def remove_duplicates(df):
     """Remove duplicate rows (prefer by id)"""
     logger.info("Removing duplicate rows")
-    before = df.count()
+    # before = df.count()
     if "id" in df.columns:
         df = df.dropDuplicates(["id"])
     else:
         df = df.dropDuplicates()
-    after = df.count()
-    logger.info(f"After deduplication: {after} rows (removed {before - after})")
+    # after = df.count()
+    # logger.info(f"After deduplication: {after} rows (removed {before - after})")
     return df
 
 
@@ -297,35 +297,35 @@ def drop_rows_with_na_in_critical_columns(df, critical_columns):
     """Drop rows with null in critical columns"""
     present = [c for c in critical_columns if c in df.columns]
     if present:
-        before = df.count()
+        # before = df.count()
         df = df.dropna(subset=present)
-        after = df.count()
-        logger.info(f"After critical NA drop: {after} rows (removed {before - after})")
+        # after = df.count()
+        # logger.info(f"After critical NA drop: {after} rows (removed {before - after})")
     return df
 
 
 def keep_rows_with_min_non_nan(df, min_non_nan=10):
     """Keep rows with at least N non-null values (expensive - use carefully)"""
     logger.info(f"Filtering rows with >= {min_non_nan} non-null values")
-    before = df.count()
+    # before = df.count()
     non_null_expr = sum(F.when(F.col(c).isNotNull(), 1).otherwise(0) for c in df.columns)
     df = df.withColumn("_non_null_count", non_null_expr) \
            .filter(F.col("_non_null_count") >= min_non_nan) \
            .drop("_non_null_count")
-    after = df.count()
-    logger.info(f"After min non-null filter: {after} rows (removed {before - after})")
+    # after = df.count()
+    # logger.info(f"After min non-null filter: {after} rows (removed {before - after})")
     return df
 
 
 def filter_released_movies(df):
     """Keep only 'Released' movies"""
     if "status" in df.columns:
-        before = df.count()
+        # before = df.count()
         df = df.filter(F.col("status") == "Released").drop("status")
-        after = df.count()
-        logger.info(f"Kept Released movies: {after} (removed {before - after})")
+        # after = df.count()
+        # logger.info(f"Kept Released movies: {after} (removed {before - after})")
     else:
-        logger.info("No 'status' column → skipping released filter")
+        logger.info("No 'status' column -> skipping released filter")
     return df
 
 
@@ -334,7 +334,7 @@ def removing_na_and_duplicates(df):
     logger.info("Starting removing_na_and_duplicates pipeline")
     df = remove_duplicates(df)
     df = drop_rows_with_na_in_critical_columns(df, ["title", "id"])
-    df = keep_rows_with_min_non_nan(df, min_non_nan=10)  # ← comment out if too slow
+    df = keep_rows_with_min_non_nan(df, min_non_nan=10)
     df = filter_released_movies(df)
     logger.info(f"Final size after cleaning: {df.count()} rows")
     return df
@@ -352,9 +352,9 @@ def reorder_columns(df, desired_order):
 
 
 def reset_index(df):
-    """Spark DataFrames don't have index → no-op or add monotonic id if needed"""
+    """Spark DataFrames don't have index -> no-op or add monotonic id if needed"""
     logger.info("Resetting index (no-op in Spark)")
-    return df  # or: .withColumn("row_id", F.monotonically_increasing_id())
+    return df  
 
 
 def finalize_dataframe(df):
@@ -367,6 +367,6 @@ def finalize_dataframe(df):
         'overview', 'spoken_languages', 'poster_path', 'cast', 'cast_size', 'director', 'crew_size'
     ]
     df = reorder_columns(df, desired_order)
-    df = reset_index(df)
+    # df = reset_index(df)
     logger.info(f"DataFrame finalized – rows: {df.count()}, columns: {len(df.columns)}")
     return df
